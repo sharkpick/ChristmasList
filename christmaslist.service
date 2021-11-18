@@ -1,0 +1,13 @@
+[Unit]
+Description=christmas list website
+
+[Service]
+User=wdillon
+Type=simple
+Restart=always
+RestartSec=5s
+ExecStart=/opt/ChristmasList/christmaslist
+WorkingDirectory=/opt/ChristmasList/
+
+[Install]
+WantedBy=multi-user.target

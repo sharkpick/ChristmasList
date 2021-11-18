@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Christmas List Login</title>
+        <style>
+            body {
+                background-color: cornsilk;
+                font-size: larger;
+            }
+            li {
+                
+                padding: 3%;
+            }
+            .topnav {
+                overflow: hidden;
+            }
+            .topnav a {
+                float: left;
+                display: block;
+                color: black;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .active {
+                background-color: #04aa6d;
+                color: white;
+            }
+            .topnav a:hover {
+                color: black;
+                background-color: #04aabd;
+            }
+            .topnav a:visited {
+                color: darkslategray;
+            }
+        </style> 
+         <div class="topnav" style="text-align: center; font-size: large;">
+            <a class="active" href="/">Home</a>
+            <a href="/addgift">Add Gift</a>
+            <a href="/giftlist">Full List</a>
+        </div>   
+    </head>
+    <body>
+        <br><h4>Christmas List</h4>
+        {{range .}}
+        <a href="/giftlist?username={{.Name}}&userid={{.Id}}">{{.Name}}</a><br>
+        {{end}}       
+    </body>
+</html>

@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Christmas List</title>
+        <style>
+            body {
+                background-color: cornsilk;
+                font-size: larger;
+            }
+            li {
+                
+                padding: 3%;
+            }
+            .topnav {
+                overflow: hidden;
+            }
+            .topnav a {
+                float: left;
+                display: block;
+                color: black;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .active {
+                background-color: #04aa6d;
+                color: white;
+            }
+            .topnav a:hover {
+                color: black;
+                background-color: #04aabd;
+            }
+            .topnav a:visited {
+                color: darkslategray;
+            }
+        </style> 
+         <div class="topnav" style="text-align: center; font-size: large;">
+            <a class="active" href="/">Home</a>
+            <a href="/addgift">Add Gift</a>
+            <a href="/giftlist">Gifts</a>
+        </div>   
+    </head>
+    <body>
+        <br><h4>Add A Gift</h4>
+        <p>
+            New recipients will be added if they do not already exist
+        </p>
+        <form action="/insert", method="POST">
+            <label for "rcptname">Recipient Name:</label><br>
+            <input type="text" id="rcptname" name="rcptname"><br>
+            <label for "giftname">Gift Name:</label><br>
+            <input type="text" id="giftname" name="giftname"><br>
+            <label for "price">Price:</label><br>
+            <input type="text" id="price" name="price"><br>
+            <label for "url">URL:</label><br>
+            <input type="text" id="url" name="url"><br>            
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>

@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Christmas List</title>
+        <style>
+            body {
+                background-color: cornsilk;
+                font-size: larger;
+            }
+            .topnav {
+                overflow: hidden;
+            }
+            .topnav a {
+                float: left;
+                display: block;
+                color: black;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .active {
+                background-color: #04aa6d;
+                color: white;
+            }
+            .topnav a:hover {
+                color: black;
+                background-color: #04aabd;
+            }
+            .topnav a:visited {
+                color: darkslategray;
+            }
+        </style> 
+         <div class="topnav" style="text-align: center; font-size: large;">
+            <a href="/">Home</a>
+            <a href="/addgift">Add Gift</a>
+            <a class="active" href="/giftlist">Gifts</a>            
+        </div>   
+    </head>
+    <body>
+        <p>
+        {{ range . }}
+        Recipient: {{.Name}} <br>
+        Shopping Completed: {{.Finished}} <br>
+        Total Anticipated Cost: {{.TotalCost}} <br>
+        Shopping List: 
+        {{ range .Gifts }}
+        <ul style="list-style-type: disc;">
+            <li>Gift Name: {{.Name}}</li>
+            <ul style="list-style-type: none;">
+                <li>Price: {{.GetPrice}}</li>
+                <li>Purchased: {{.Purchased}}</li>
+                <li> <a href={{.URL}}>link</a><br></li>
+            </ul>            
+            <a href="/purchased?giftid={{.Id}}&username={{.BelongsTo}}">Mark {{.Name}} As Purchased</a><br>
+            <a href="/deletegift?giftid={{.Id}}&username={{.BelongsTo}}">Delete {{.Name}}</a><br>   
+        </ul>               
+        {{end}}
+        <a href="/deleteuser?userid={{.Id}}&username={{.Name}}">Delete {{.Name}}</a><br><br>
+        {{end}}
+        </p>
+    </body>
+</html>
