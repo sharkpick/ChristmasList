@@ -44,7 +44,7 @@
     <body>
         <p>
         {{ range . }}
-        Recipient: {{.Name}} <br>
+        {{.Name}} <br>
         Shopping Completed: {{.Finished}} <br>
         Total Anticipated Cost: {{.TotalCost}} <br>
         Shopping List: 
@@ -54,7 +54,7 @@
             <ul style="list-style-type: none;">
                 <li>Price: {{.GetPrice}}</li>
                 <li>Purchased: {{.Purchased}}</li>
-                <li> <a href={{.URL}}>link</a><br></li>
+                <li> <a href={{.URL}}>link</a></li><br>
             </ul>            
             <a href="/purchased?giftid={{.Id}}&username={{.BelongsTo}}">Mark {{.Name}} As Purchased</a><br>
             <a href="/deletegift?giftid={{.Id}}&username={{.BelongsTo}}">Delete {{.Name}}</a><br>   

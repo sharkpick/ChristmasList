@@ -46,10 +46,7 @@ func doInsert(w http.ResponseWriter, r *http.Request) {
 	rcpt := r.Form.Get("rcptname")
 	giftname := r.Form.Get("giftname")
 	priceString := r.Form.Get("price")
-	priceFloat, err := strconv.ParseFloat(priceString, 64)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	priceFloat, _ := strconv.ParseFloat(priceString, 64)
 	priceInt := int(priceFloat * 100)
 	url := r.Form.Get("url")
 	l.AddGift(rcpt, giftname, priceInt, url)

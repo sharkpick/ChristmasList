@@ -152,14 +152,16 @@ func (l *ListOrganizer) AddGift(recipientName, giftName string, price int, url s
 			log.Fatalln("Error:", err)
 		}
 	}
-	insertSQL := `INSERT INTO ` + GiftTable + `(name, price, url, purchased, userid) VALUES (?, ?, ?, ?, ?)`
-	statement, err := l.db.Prepare(insertSQL)
-	if err != nil {
-		log.Fatalln("Error preparing SQL statement:", err)
-	}
-	_, err = statement.Exec(giftName, price, url, false, recipient.Id)
-	if err != nil {
-		log.Println("Error executing SQL statement:", err)
+	if giftName != "" {
+		insertSQL := `INSERT INTO ` + GiftTable + `(name, price, url, purchased, userid) VALUES (?, ?, ?, ?, ?)`
+		statement, err := l.db.Prepare(insertSQL)
+		if err != nil {
+			log.Fatalln("Error preparing SQL statement:", err)
+		}
+		_, err = statement.Exec(giftName, price, url, false, recipient.Id)
+		if err != nil {
+			log.Println("Error executing SQL statement:", err)
+		}
 	}
 }
 
