@@ -13,6 +13,13 @@ const (
 	RecipientTable = "tRecipients"
 )
 
+func humanizeBool(b bool) string {
+	if b {
+		return "yes"
+	}
+	return "no"
+}
+
 type Gift struct {
 	Id        int
 	Name      string
@@ -20,6 +27,11 @@ type Gift struct {
 	URL       string
 	Purchased bool
 	BelongsTo string
+}
+
+func (g *Gift) Print() string {
+	return fmt.Sprintf("\t%s\n\tprice: %s\n\talready purchased: %v\n\n",
+		g.Name, g.GetPrice(), humanizeBool(g.Purchased))
 }
 
 func (g *Gift) GetPrice() string {
@@ -31,6 +43,15 @@ type Recipient struct {
 	Name     string
 	Gifts    []Gift
 	Finished bool
+}
+
+func (r *Recipient) Print() string {
+	var res = fmt.Sprintf("%s\nestimated amount to spend: %s\nshopping finished: %v\nwishlist:\n\n",
+		r.Name, r.TotalCost(), humanizeBool(r.Finished))
+	for _, g := range r.Gifts {
+		res += string(g.Print())
+	}
+	return res
 }
 
 func (r *Recipient) TotalCost() string {
@@ -192,12 +213,28 @@ func (l *ListOrganizer) GetAllUsersAndGifts() []Recipient {
 }
 
 func (l *ListOrganizer) SetPurchased(id int) {
-	updateSQL := `UPDATE ` + GiftTable + ` SET purchased=1 WHERE id=?`
+	purchased := func() int {
+		selectSQL := `SELECT purchased FROM ` + GiftTable + ` WHERE id=?`
+		statement, err := l.db.Prepare(selectSQL)
+		if err != nil {
+			log.Fatalln("Error in SetPurchased", err)
+		}
+		var purchased int
+		statement.QueryRow(id).Scan(&purchased)
+		return func() int {
+			if purchased == 1 {
+				return 0
+			} else {
+				return 1
+			}
+		}()
+	}()
+	updateSQL := `UPDATE ` + GiftTable + ` SET purchased=? WHERE id=?`
 	statement, err := l.db.Prepare(updateSQL)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	statement.Exec(id)
+	statement.Exec(purchased, id)
 }
 
 func (l *ListOrganizer) DropGift(id int) {
@@ -212,4 +249,23 @@ func (l *ListOrganizer) DropGift(id int) {
 	} else {
 		log.Println("Deleted gift", id)
 	}
+}
+
+func (l *ListOrganizer) ExportTXT(target ...string) string {
+	var res = make([]byte, 0, 500000)
+	var data []Recipient
+	if len(target) == 0 {
+		data = l.GetAllUsersAndGifts()
+	} else {
+		d, err := l.GetRecipient(target[0])
+		if err != nil {
+			log.Fatalln("Fatal Error: target recipient", target, "not found")
+		}
+		data = append(data, d)
+	}
+
+	for _, r := range data {
+		res = append(res, []byte(r.Print())...)
+	}
+	return string(res)
 }

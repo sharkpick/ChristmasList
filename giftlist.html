@@ -50,13 +50,13 @@
         Shopping List: 
         {{ range .Gifts }}
         <ul style="list-style-type: disc;">
-            <li>Gift Name: {{.Name}}</li>
+            <li>{{.Name}}</li>
             <ul style="list-style-type: none;">
                 <li>Price: {{.GetPrice}}</li>
                 <li>Purchased: {{.Purchased}}</li>
                 <li> <a href={{.URL}}>link</a></li><br>
             </ul>            
-            <a href="/purchased?giftid={{.Id}}&username={{.BelongsTo}}">Mark {{.Name}} As Purchased</a><br>
+            <a href="/purchased?giftid={{.Id}}&username={{.BelongsTo}}">Toggle {{.Name}} Purchased</a><br>
             <a href="/deletegift?giftid={{.Id}}&username={{.BelongsTo}}">Delete {{.Name}}</a><br>   
         </ul>               
         {{end}}

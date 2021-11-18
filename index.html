@@ -11,10 +11,6 @@
                 background-color: cornsilk;
                 font-size: larger;
             }
-            li {
-                
-                padding: 3%;
-            }
             .topnav {
                 overflow: hidden;
             }
@@ -46,9 +42,18 @@
         </div>   
     </head>
     <body>
-        <br><h4>Christmas List</h4>
-        {{range .}}
-        <a href="/giftlist?username={{.Name}}&userid={{.Id}}">{{.Name}}</a><br>
-        {{end}}       
+        <br><strong>Christmas Lists:</strong><br>
+        <ul style="list-style-type:disc;">
+            {{range .}}
+            <li><a href="/giftlist?username={{.Name}}&userid={{.Id}}">{{.Name}}</a></li>
+            {{end}}
+        </ul>
+        <p>
+            <strong>Export Full List:</strong><br>
+            To use, right-click and then select "Save Target Link" for Google
+            Chrome or "Save Link As" in Firefox.<br>
+            <!---<a href="/export?type=json">Export JSON</a><br>--->
+            <a href="/export?type=txt&name=allinclusive">Export plain text</a>
+        </p>
     </body>
 </html>

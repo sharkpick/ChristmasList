@@ -19,6 +19,7 @@ const (
 	DatabaseLocation = "christmasList.db"
 	WebsiteLogFile   = "christmasList.log"
 	SalesTaxRate     = 0.06 // michigan sales tax
+	ListenAddr       = ":2113"
 )
 
 var (
@@ -97,7 +98,7 @@ func doPurchased(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("Error converting ID to int", err)
 	}
 	l.SetPurchased(id)
-	http.Redirect(w, r, "/edit?username="+username, http.StatusFound)
+	http.Redirect(w, r, "/giftlist?username="+username, http.StatusFound)
 }
 
 func doDeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -130,6 +131,28 @@ func doDeleteGift(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/edit?username="+username, http.StatusFound)
 }
 
+func doExport(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	s := usersession.New()
+	s.Ip = r.RemoteAddr
+	log.Println(s.GetID(), s.Ip, r.URL.Path)
+	//exportType := r.URL.Query()["type"][0]
+	exportTarget := r.URL.Query()["name"][0]
+	if exportTarget == "allinclusive" {
+		// full export
+		r := l.ExportTXT()
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(r))
+	} else {
+		r := l.ExportTXT(exportTarget)
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(r))
+	}
+
+}
+
 func doFavicon(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	http.ServeFile(w, r, "favicon.ico")
@@ -157,12 +180,13 @@ func setupHandlers() {
 	mux.HandleFunc("/deletegift", doDeleteGift)
 	mux.HandleFunc("/deleteuser", doDeleteUser)
 	mux.HandleFunc("/favicon.ico", doFavicon)
+	mux.HandleFunc("/export", doExport)
 }
 
 var mux = http.NewServeMux()
 var server = &http.Server{
 	Handler: http.TimeoutHandler(mux, time.Second*60, "Request Timed Out!"),
-	Addr:    ":8080",
+	Addr:    ListenAddr,
 }
 
 func main() {
