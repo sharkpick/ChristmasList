@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -19,11 +20,11 @@ const (
 	DatabaseLocation = "christmasList.db"
 	WebsiteLogFile   = "christmasList.log"
 	SalesTaxRate     = 0.06 // michigan sales tax
-	ListenAddr       = ":2113"
 )
 
 var (
-	l *ListOrganizer
+	l          *ListOrganizer
+	ListenAddr string
 )
 
 func doAddGift(w http.ResponseWriter, r *http.Request) {
@@ -184,12 +185,12 @@ func setupHandlers() {
 }
 
 var mux = http.NewServeMux()
-var server = &http.Server{
-	Handler: http.TimeoutHandler(mux, time.Second*60, "Request Timed Out!"),
-	Addr:    ListenAddr,
-}
 
 func main() {
+	// get port from command line
+	portPtr := flag.String("port", "8080", "an open port for this program to listen at")
+	flag.Parse()
+	ListenAddr = ":" + *portPtr
 	// prep DB
 	file, err := os.OpenFile(WebsiteLogFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
 	if err != nil {
@@ -197,6 +198,11 @@ func main() {
 	}
 	defer file.Close()
 	log.SetOutput(file)
+	var server = &http.Server{
+		Handler: http.TimeoutHandler(mux, time.Second*60, "Request Timed Out!"),
+		Addr:    ListenAddr,
+	}
+
 	setupHandlers()
 	var wg sync.WaitGroup
 	wg.Add(1)
