@@ -2,7 +2,7 @@
 Description=christmas list website
 
 [Service]
-User=wdillon
+User=root
 Type=simple
 Restart=always
 RestartSec=5s
