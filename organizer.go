@@ -149,7 +149,7 @@ func (l *ListOrganizer) AddGift(recipientName, giftName string, price int, url s
 		l.CreateRecipient(recipientName)
 		recipient, err = l.GetRecipient(recipientName)
 		if err != nil || recipient.Name == "" {
-			log.Fatalln("Error:", err)
+			log.Fatalln("AddGift Error:", err)
 		}
 	}
 	if giftName != "" {

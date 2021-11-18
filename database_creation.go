@@ -14,7 +14,8 @@ func createRecipientTable(db *sql.DB) {
 	log.Println("creating", RecipientTable)
 	statement, err := db.Prepare(createTableSQL)
 	if err != nil {
-		//log.Fatalln("Error preparing statement in createRecipientTable", err)
+		log.Println(err)
+		return
 	}
 	statement.Exec()
 	log.Println(RecipientTable, "created")
@@ -33,7 +34,8 @@ func createGiftsTable(db *sql.DB) {
 	log.Println("creating", GiftTable)
 	statement, err := db.Prepare(createTableSQL)
 	if err != nil {
-		//log.Fatalln("Error preparing statement in createRecipientTable", err)
+		log.Println(err)
+		return
 	}
 	statement.Exec()
 	log.Println(GiftTable, "created")

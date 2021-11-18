@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"sync"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/squishd/usersession"
@@ -25,6 +26,7 @@ var (
 )
 
 func doAddGift(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	s := usersession.New()
 	s.Ip = r.RemoteAddr
 	log.Println(s.GetID(), s.Ip, r.URL.Path)
@@ -36,6 +38,7 @@ func doAddGift(w http.ResponseWriter, r *http.Request) {
 }
 
 func doInsert(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	s := usersession.New()
 	s.Ip = r.RemoteAddr
 	log.Println(s.GetID(), s.Ip, r.URL.Path)
@@ -54,6 +57,7 @@ func doInsert(w http.ResponseWriter, r *http.Request) {
 }
 
 func doGiftList(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	s := usersession.New()
 	s.Ip = r.RemoteAddr
 	log.Println(s.GetID(), s.Ip, r.URL.Path)
@@ -82,6 +86,7 @@ func doGiftList(w http.ResponseWriter, r *http.Request) {
 }
 
 func doPurchased(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	s := usersession.New()
 	s.Ip = r.RemoteAddr
 	log.Println(s.GetID(), s.Ip, r.URL.Path)
@@ -96,6 +101,7 @@ func doPurchased(w http.ResponseWriter, r *http.Request) {
 }
 
 func doDeleteUser(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	s := usersession.New()
 	s.Ip = r.RemoteAddr
 	log.Println(s.GetID(), s.Ip, r.URL.Path)
@@ -110,6 +116,7 @@ func doDeleteUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func doDeleteGift(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	s := usersession.New()
 	s.Ip = r.RemoteAddr
 	log.Println(s.GetID(), s.Ip, r.URL.Path)
@@ -124,10 +131,12 @@ func doDeleteGift(w http.ResponseWriter, r *http.Request) {
 }
 
 func doFavicon(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	http.ServeFile(w, r, "favicon.ico")
 }
 
 func doIndex(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	s := usersession.New()
 	s.Ip = r.RemoteAddr
 	log.Println(s.GetID(), s.Ip, r.URL.Path)
@@ -152,7 +161,7 @@ func setupHandlers() {
 
 var mux = http.NewServeMux()
 var server = &http.Server{
-	Handler: mux,
+	Handler: http.TimeoutHandler(mux, time.Second*60, "Request Timed Out!"),
 	Addr:    ":8080",
 }
 
@@ -176,8 +185,8 @@ func main() {
 		log.Fatalln("Error opening database:", err)
 	}
 	defer theDatabase.Close()
-	//createGiftsTable(theDatabase)
-	//createRecipientTable(theDatabase)
+	createGiftsTable(theDatabase)
+	createRecipientTable(theDatabase)
 	l = NewListOrganizer(theDatabase, "ChristmasList")
 	wg.Wait()
 }
