@@ -13,7 +13,7 @@ import (
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/squishd/usersession"
+	"github.com/sharkpick/usersession"
 )
 
 const (

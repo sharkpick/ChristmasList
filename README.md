@@ -1,7 +1,7 @@
 # ChristmasList
 
 ## to use:
-1. `cd /opt && sudo git clone https://github.com/squishd/ChristmasList`
+1. `cd /opt && sudo git clone https://github.com/sharkpick/ChristmasList`
 2. `cd ChristmasList && go build`
 3. `./christmaslist`
 
